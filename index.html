@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Personal Carbon Footprint Tracker
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="top-header">
+
+        <div class="logo">
+            🌱 CarbonTrack
+        </div>
+
+        <nav>
+
+            <a href="#home">
+                Home
+            </a>
+
+            <a href="#tracker">
+                Tracker
+            </a>
+
+            <a href="#dashboard">
+                Dashboard
+            </a>
+
+            <a href="#how-it-works">
+                How It Works
+            </a>
+
+            <a href="#about">
+                About
+            </a>
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- ================= HERO SECTION ================= -->
+
+    <section
+        class="hero"
+        id="home"
+    >
+
+        <div class="hero-content">
+
+            <h1>
+                🌍 Personal Carbon Footprint Tracker
+            </h1>
+
+            <p>
+                Understand your daily carbon emissions,
+                track your lifestyle impact, and make
+                more sustainable choices.
+            </p>
+
+            <a
+                href="#tracker"
+                class="start-btn"
+            >
+                Start Tracking ↓
+            </a>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= TRACKER SECTION ================= -->
+
+    <section
+        class="container"
+        id="tracker"
+    >
+
+        <h2>
+            🌱 Track Your Carbon Footprint
+        </h2>
+
+        <p class="subtitle">
+            Enter your typical lifestyle activity data to estimate your
+            scientific carbon footprint and annualized climate impact.
+        </p>
+
+
+        <!-- Validation Errors -->
+        <div id="validationErrors" class="validation-errors" style="display: none;"></div>
+
+
+        <!-- ================= TRACKER FORM ================= -->
+
+        <form id="carbonForm">
+
+
+            <!-- Household Profile -->
+
+            <div class="card household-card">
+
+                <div class="card-header">
+                    <h3>
+                        🏠 Household Profile
+                    </h3>
+                </div>
+
+                <div class="household-row">
+                    <div class="dynamic-row-field">
+                        <label for="householdMembers">
+                            Household Size (Number of people sharing home energy & waste)
+                        </label>
+                        <input
+                            type="number"
+                            id="householdMembers"
+                            min="1"
+                            max="20"
+                            step="1"
+                            value="1"
+                            placeholder="e.g. 3 or 4"
+                            required
+                        >
+                        <small class="field-hint">
+                            ℹ️ Shared home electricity, cooking fuel, and household waste are divided by this count for accurate personal per-capita allocation.
+                        </small>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Transportation -->
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h3>
+                        🚗 Transportation & Commute Modes
+                    </h3>
+                    <button
+                        type="button"
+                        class="add-row-btn"
+                        id="addTransportBtn"
+                    >
+                        ➕ Add Another Mode
+                    </button>
+                </div>
+
+                <div id="transportRows" class="dynamic-rows-container">
+                    <!-- Dynamic transport rows will be rendered here -->
+                </div>
+
+            </div>
+
+
+
+            <!-- Electricity -->
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h3>
+                        ⚡ Electricity & Household Energy (Monthly / Daily)
+                    </h3>
+                    <button
+                        type="button"
+                        class="add-row-btn"
+                        id="addElectricityBtn"
+                    >
+                        ➕ Add Another Source
+                    </button>
+                </div>
+
+                <div id="electricityRows" class="dynamic-rows-container">
+                    <!-- Dynamic electricity rows will be rendered here -->
+                </div>
+
+            </div>
+
+
+
+            <!-- Food -->
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h3>
+                        🍽️ Food & Nutrition
+                    </h3>
+                    <button
+                        type="button"
+                        class="add-row-btn"
+                        id="addFoodBtn"
+                    >
+                        ➕ Add Diet / Meal Type
+                    </button>
+                </div>
+
+                <div id="foodRows" class="dynamic-rows-container">
+                    <!-- Dynamic food rows will be rendered here -->
+                </div>
+
+            </div>
+
+
+            <!-- Waste -->
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h3>
+                        ♻️ Solid Waste & Recycling
+                    </h3>
+                    <button
+                        type="button"
+                        class="add-row-btn"
+                        id="addWasteBtn"
+                    >
+                        ➕ Add Waste Stream
+                    </button>
+                </div>
+
+                <div id="wasteRows" class="dynamic-rows-container">
+                    <!-- Dynamic waste rows will be rendered here -->
+                </div>
+
+            </div>
+
+
+            <!-- Air Travel -->
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h3>
+                        ✈️ Flights & Air Travel (Trips & Hours)
+                    </h3>
+                    <button
+                        type="button"
+                        class="add-row-btn"
+                        id="addFlightBtn"
+                    >
+                        ➕ Add Flight Type
+                    </button>
+                </div>
+
+                <div id="flightRows" class="dynamic-rows-container">
+                    <!-- Dynamic flight rows will be rendered here -->
+                </div>
+
+            </div>
+
+
+
+            <!-- Calculate Button -->
+
+            <button
+                type="submit"
+                class="calculate-btn"
+            >
+                Calculate My Footprint
+            </button>
+
+        </form>
+
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <div
+            id="dashboard"
+            class="dashboard"
+        >
+
+            <h2>
+                📊 Your Carbon Footprint
+            </h2>
+
+
+
+            <!-- Total Footprint -->
+
+            <div class="total-box">
+
+                <h3>
+                    Total Daily Footprint
+                </h3>
+
+                <p>
+
+                    <span id="totalEmission">
+                        0
+                    </span>
+
+                    kg CO₂e
+
+                </p>
+
+            </div>
+
+
+
+            <!-- Chart -->
+
+            <div class="chart-container">
+
+                <canvas
+                    id="carbonChart"
+                ></canvas>
+
+            </div>
+
+
+
+            <!-- Results -->
+
+            <div class="results">
+
+
+                <!-- Transportation Result -->
+
+                <!-- Transportation Result -->
+
+                <div class="result-item">
+
+                    <div class="result-item-header">
+                        <span>
+                            🚗 Transportation
+                        </span>
+
+                        <div class="result-item-value">
+                            <strong id="transportResult">
+                                0
+                            </strong>
+                            kg CO₂e
+                        </div>
+                    </div>
+
+                    <div id="transportDetails" class="result-subdetail">
+                        <!-- Details rendered here -->
+                    </div>
+
+                </div>
+
+
+
+                <!-- Electricity Result -->
+
+                <div class="result-item">
+
+                    <div class="result-item-header">
+                        <span>
+                            ⚡ Electricity & Energy
+                        </span>
+
+                        <div class="result-item-value">
+                            <strong id="electricityResult">
+                                0
+                            </strong>
+                            kg CO₂e
+                        </div>
+                    </div>
+
+                    <div id="electricityDetails" class="result-subdetail">
+                        <!-- Details rendered here -->
+                    </div>
+
+                </div>
+
+
+
+                <!-- Food Result -->
+
+                <div class="result-item">
+
+                    <div class="result-item-header">
+                        <span>
+                            🍽️ Food
+                        </span>
+
+                        <div class="result-item-value">
+                            <strong id="foodResult">
+                                0
+                            </strong>
+                            kg CO₂e
+                        </div>
+                    </div>
+
+                    <div id="foodDetails" class="result-subdetail">
+                        <!-- Details rendered here -->
+                    </div>
+
+                </div>
+
+
+
+                <!-- Waste Result -->
+
+                <div class="result-item">
+
+                    <div class="result-item-header">
+                        <span>
+                            ♻️ Waste
+                        </span>
+
+                        <div class="result-item-value">
+                            <strong id="wasteResult">
+                                0
+                            </strong>
+                            kg CO₂e
+                        </div>
+                    </div>
+
+                    <div id="wasteDetails" class="result-subdetail">
+                        <!-- Details rendered here -->
+                    </div>
+
+                </div>
+
+
+
+                <!-- Flight Result -->
+
+                <div class="result-item">
+
+                    <div class="result-item-header">
+                        <span>
+                            ✈️ Flights
+                        </span>
+
+                        <div class="result-item-value">
+                            <strong id="flightResult">
+                                0
+                            </strong>
+                            kg CO₂e
+                        </div>
+                    </div>
+
+                    <div id="flightDetails" class="result-subdetail">
+                        <!-- Details rendered here -->
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- Personalized Suggestion -->
+
+            <div class="suggestion-box">
+
+                <h3>
+                    💡 Insights & Recommendations
+                </h3>
+
+                <div id="suggestion">
+                    Your suggestions will appear here.
+                </div>
+
+                <div class="scope-note">
+                    <strong>ℹ️ Accounting Boundary:</strong> This calculator models personal direct lifestyle emissions (transport, domestic energy, diet, waste, and aviation). In IPCC carbon accounting, background societal infrastructure emissions (roads, defense, public healthcare, municipal services: ~0.8–1.2 tonnes CO₂e/year per capita) are shared across society.
+                </div>
+
+            </div>
+
+
+
+            <!-- Action Buttons -->
+
+            <div class="dashboard-actions">
+
+                <button
+                    type="button"
+                    class="reset-btn"
+                    onclick="resetTracker()"
+                >
+                    🔄 New Calculation
+                </button>
+
+                <button
+                    type="button"
+                    class="history-btn"
+                    onclick="toggleHistory()"
+                >
+                    📅 View History
+                </button>
+
+            </div>
+
+
+
+            <!-- History Section -->
+
+            <div
+                id="historySection"
+                class="history-section"
+                style="display: none;"
+            >
+
+                <h3>
+                    📅 Calculation History
+                </h3>
+
+                <div
+                    id="historyList"
+                    class="history-list"
+                ></div>
+
+                <button
+                    type="button"
+                    class="clear-history-btn"
+                    onclick="clearHistory()"
+                >
+                    🗑️ Clear History
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= HOW IT WORKS ================= -->
+
+    <section
+        class="how-it-works"
+        id="how-it-works"
+    >
+
+
+        <div class="how-heading">
+
+            <h2>
+                ⚙️ How It Works
+            </h2>
+
+            <p>
+                Track your everyday activities and understand
+                where your carbon emissions come from.
+            </p>
+
+        </div>
+
+
+
+        <div class="steps">
+
+
+            <!-- STEP 1 -->
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    1
+                </div>
+
+                <div class="step-icon">
+                    📝
+                </div>
+
+                <h3>
+                    Enter Activities
+                </h3>
+
+                <p>
+                    Enter information about transportation,
+                    electricity, food, waste, and air travel.
+                </p>
+
+            </div>
+
+
+
+            <!-- STEP 2 -->
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    2
+                </div>
+
+                <div class="step-icon">
+                    🧮
+                </div>
+
+                <h3>
+                    Calculate Emissions
+                </h3>
+
+                <p>
+                    The system applies scientific emission factors
+                    (IPCC / DEFRA) to estimate your carbon footprint.
+                </p>
+
+            </div>
+
+
+
+            <!-- STEP 3 -->
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    3
+                </div>
+
+                <div class="step-icon">
+                    📊
+                </div>
+
+                <h3>
+                    View Dashboard
+                </h3>
+
+                <p>
+                    See your total and category-wise emissions
+                    through an interactive dashboard with climate rating.
+                </p>
+
+            </div>
+
+
+
+            <!-- STEP 4 -->
+
+            <div class="step-card">
+
+                <div class="step-number">
+                    4
+                </div>
+
+                <div class="step-icon">
+                    💡
+                </div>
+
+                <h3>
+                    Reduce Impact
+                </h3>
+
+                <p>
+                    Get personalized, quantified reduction suggestions
+                    based on your largest emission sources.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= ABOUT SECTION ================= -->
+
+    <section
+        class="about"
+        id="about"
+    >
+
+
+        <h2>
+            About the Project
+        </h2>
+
+        <p>
+            Personal Carbon Footprint Tracker is a prototype
+            designed to help users estimate and understand
+            carbon emissions generated by everyday activities.
+        </p>
+
+
+
+        <div class="about-grid">
+
+
+            <!-- Track Activities -->
+
+            <div class="about-card">
+
+                <h3>
+                    🚗 Track Activities
+                </h3>
+
+                <p>
+                    Track transportation, electricity,
+                    food, waste, and air travel.
+                </p>
+
+            </div>
+
+
+
+            <!-- Analyze Emissions -->
+
+            <div class="about-card">
+
+                <h3>
+                    📊 Analyze Emissions
+                </h3>
+
+                <p>
+                    View total and category-wise carbon
+                    emissions through a dashboard.
+                </p>
+
+            </div>
+
+
+
+            <!-- Reduce Impact -->
+
+            <div class="about-card">
+
+                <h3>
+                    💡 Reduce Impact
+                </h3>
+
+                <p>
+                    Receive personalized suggestions based
+                    on your largest emission source.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="footer">
+
+        <div class="footer-content">
+
+            <h3>
+                🌱 CarbonTrack
+            </h3>
+
+            <p>
+                Personal Carbon Footprint Tracker
+            </p>
+
+            <p class="footer-tech">
+                Built using HTML • CSS • JavaScript • Chart.js
+            </p>
+
+            <p class="footer-note">
+                Prototype Project • Second Year IT
+            </p>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>
